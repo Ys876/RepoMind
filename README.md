@@ -1,2 +1,2 @@
 # RepoMind
-agentic AI codebase intelligence system that helps onboarding devs/interns understand &amp; debug large GitHub repositories in initial sessions
+An agentic AI codebase intelligence system that helps onboarding devs/interns understand &amp; debug large GitHub repositories in initial sessions
