@@ -2,7 +2,7 @@ from tree_sitter import Language, Parser  # type: ignore
 import tree_sitter_python as tspython  # type: ignore
 import tree_sitter_javascript as tsjavascript #type: ignore
 from dataclasses import dataclass #struct in python for chunks
-
+import os
 @dataclass
 class Chunk:
     name: str
@@ -44,3 +44,17 @@ def chunk_file(filepath):
     find_func(tree.root_node) #call recursive on root
     return chunks
 #print(chunk_file("sample/sample.js"))
+
+def chunk_repo(repo_path):
+    results = []
+    for root, dirs, files in os.walk(repo_path):
+        for file in files:
+            fullpath = os.path.join(root, file)
+            if file.endswith(".py") or file.endswith(".js"):
+                res = chunk_file(fullpath)
+                results.extend(res)
+    return results
+
+chunks = chunk_repo("sample/flask")
+print(f"Total chunks: {len(chunks)}")
+print(chunks[0])  # print first chunk to verify it looks right
