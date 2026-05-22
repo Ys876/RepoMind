@@ -54,7 +54,3 @@ def chunk_repo(repo_path):
                 res = chunk_file(fullpath)
                 results.extend(res)
     return results
-
-chunks = chunk_repo("sample/flask")
-print(f"Total chunks: {len(chunks)}")
-print(chunks[0])  # print first chunk to verify it looks right

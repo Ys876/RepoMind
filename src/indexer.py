@@ -1,11 +1,27 @@
-import chromadb # type: ignore
+import chromadb
+import ollama
+from chromadb import Documents, EmbeddingFunction, Embeddings
 from chunker import chunk_repo
-#stores data locally on disk
+
+class OllamaEmbeddings(EmbeddingFunction):
+    def __call__(self, input: Documents) -> Embeddings:
+        embeddings = []
+        for text in input:
+            response = ollama.embeddings(model="nomic-embed-text", prompt=text)
+            embeddings.append(response["embedding"])
+        return embeddings
+
 client = chromadb.PersistentClient(path="db")
 
-# codebase
-collection = client.get_or_create_collection("codebase")
+# delete old collection, recreate with ollama embeddings
+client.delete_collection("codebase")
+collection = client.create_collection(
+    "codebase",
+    embedding_function=OllamaEmbeddings()
+)
+
 chunks = chunk_repo("sample/flask")
+
 if collection.count() == 0:
     collection.add(
         documents=[chunk.func_code for chunk in chunks],
@@ -15,11 +31,11 @@ if collection.count() == 0:
 
 results = collection.query(
     query_texts=["how does routing work"],
-    n_results=5 #chromadb converts to vector and returns 5 most similar chunks
+    n_results=5
 )
 
 for i, doc in enumerate(results["documents"][0]):
     print(f"--- Result {i+1} ---")
-    print(results["metadatas"][0][i]) #returned chromadb results 
+    print(results["metadatas"][0][i])
     print(doc[:200])
     print()
