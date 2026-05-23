@@ -1,19 +1,18 @@
 import chromadb
-from langchain.tools import tool
 from langchain_ollama import OllamaLLM
 from indexer import OllamaEmbeddings
 
-client = chromadb.PersistentClient(path="db")
-collection = client.get_or_create_collection(
-    "codebase",
-    embedding_function=OllamaEmbeddings()
-)
-
 llm = OllamaLLM(model="llama3.2:3b", temperature=0.3)
 
-@tool
-def search_code(query: str) -> str:
-    """Search the codebase for relevant code chunks."""
+def get_collection():
+    client = chromadb.PersistentClient(path="db")
+    return client.get_or_create_collection(
+        "codebase",
+        embedding_function=OllamaEmbeddings()
+    )
+
+def search(query: str) -> str:
+    collection = get_collection()
     results = collection.query(query_texts=[query], n_results=3)
     output = ""
     for i, doc in enumerate(results["documents"][0]):
@@ -26,11 +25,9 @@ def run_agent(question: str) -> str:
 
     for i in range(5):
         if i == 0:
-            # force a short search query only
             search_prompt = f"Reply with only 2-4 words to search for in a codebase to answer: '{question}'. No explanation, just the search terms."
             query = llm.invoke(search_prompt).strip().strip('"')
         else:
-            # ask if we have enough or need to search more
             decide_prompt = f"""Question: {question}
 
 Retrieved code so far:
@@ -39,9 +36,9 @@ Retrieved code so far:
 Do you have enough code to answer with specific file and line citations?
 Reply with SEARCH: followed by 2-4 word query if you need more.
 Reply with DONE if you have enough."""
-            
+
             response = llm.invoke(decide_prompt).strip()
-            
+
             if "DONE" in response:
                 break
             elif "SEARCH:" in response:
@@ -50,10 +47,9 @@ Reply with DONE if you have enough."""
                 break
 
         print(f"Iteration {i+1} — searching: {query}")
-        results = search_code.invoke(query)
+        results = search(query)
         context += f"\n=== Search {i+1}: '{query}' ===\n{results}"
 
-    # force answer using only retrieved code
     final_prompt = f"""You only know what is in the code chunks below. You have no other knowledge.
 Answer ONLY using these chunks. Cite exact file and line numbers like (file.py:L34) for every sentence.
 If something is not in the chunks say "not found in retrieved code."

@@ -5,10 +5,16 @@ import os
 import shutil
 import chromadb
 from chunker import chunk_repo
-from agent import run_agent, collection
+from agent import run_agent
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class IndexRequest(BaseModel):
     github_url: str
 
