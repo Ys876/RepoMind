@@ -1,0 +1,345 @@
+[
+    {
+      "question": "What function registers a URL route in Flask?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "add_url_rule",
+      "also_valid": ["src/flask/app.py", "src/flask/blueprints.py"]
+    },
+    {
+      "question": "What decorator is used to define a route in Flask?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "route",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask handle 404 errors?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "handle_http_exception",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function runs the Flask development server?",
+      "expected_file": "src/flask/cli.py",
+      "expected_function": "run_command"
+    },
+    {
+      "question": "How does Flask handle request context?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "push"
+    },
+    {
+      "question": "What function renders a Jinja2 template in Flask?",
+      "expected_file": "src/flask/templating.py",
+      "expected_function": "render_template"
+    },
+    {
+      "question": "How does Flask send static files?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "send_static_file",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function creates a Flask application instance?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "__init__",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "How does Flask register a blueprint?",
+      "expected_file": "src/flask/sansio/blueprints.py",
+      "expected_function": "register",
+      "also_valid": ["src/flask/blueprints.py"]
+    },
+    {
+      "question": "What function redirects a request in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "redirect"
+    },
+    {
+      "question": "How does Flask handle application errors?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "handle_exception",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function returns a JSON response in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "jsonify",
+      "also_valid": ["src/flask/wrappers.py"]
+    },
+    {
+      "question": "How does Flask handle session data?",
+      "expected_file": "src/flask/sessions.py",
+      "expected_function": "open_session",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function flashes a message in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "flash"
+    },
+    {
+      "question": "How does Flask handle before request hooks?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "before_request",
+      "also_valid": ["src/flask/app.py", "src/flask/sansio/scaffold.py"]
+    },
+    {
+      "question": "What function gets flashed messages in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "get_flashed_messages"
+    },
+    {
+      "question": "How does Flask handle after request hooks?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "after_request",
+      "also_valid": ["src/flask/app.py", "src/flask/sansio/scaffold.py"]
+    },
+    {
+      "question": "What function aborts a request with an error code in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "abort"
+    },
+    {
+      "question": "How does Flask handle teardown context?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "pop",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function generates a URL in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "url_for"
+    },
+    {
+      "question": "How does Flask handle method routing for GET requests?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "get",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask handle method routing for POST requests?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "post",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function makes a test client in Flask?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "test_client"
+    },
+    {
+      "question": "How does Flask handle application configuration?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "__init__",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function sends a file as a response in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "send_file"
+    },
+    {
+      "question": "How does Flask handle template context processors?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "template_context_processor",
+      "also_valid": ["src/flask/app.py", "src/flask/sansio/scaffold.py"]
+    },
+    {
+      "question": "What function opens a resource file in Flask?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "open_resource",
+      "also_valid": ["src/flask/app.py", "src/flask/blueprints.py"]
+    },
+    {
+      "question": "How does Flask handle error handlers?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "register_error_handler",
+      "also_valid": ["src/flask/app.py", "src/flask/sansio/scaffold.py"]
+    },
+    {
+      "question": "What function streams a response in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "stream_with_context"
+    },
+    {
+      "question": "How does Flask handle CLI commands?",
+      "expected_file": "src/flask/cli.py",
+      "expected_function": "main"
+    },
+    {
+      "question": "What function copies the current application context in Flask?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "__enter__"
+    },
+    {
+      "question": "How does Flask handle signals?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "ensure_sync",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function sends a file from a directory in Flask?",
+      "expected_file": "src/flask/helpers.py",
+      "expected_function": "send_from_directory"
+    },
+    {
+      "question": "How does Flask handle view classes?",
+      "expected_file": "src/flask/views.py",
+      "expected_function": "dispatch_request"
+    },
+    {
+      "question": "What function makes a test request context in Flask?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "test_request_context"
+    },
+    {
+      "question": "How does Flask handle debug mode?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "debug",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function handles HTTP method overrides in Flask?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "_method_route",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask handle application context teardown?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "pop",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function logs a message in Flask?",
+      "expected_file": "src/flask/logging.py",
+      "expected_function": "create_logger",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask handle response creation?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "make_response",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What is the complete execution path when a request comes into Flask from receiving to returning a response?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "full_dispatch_request",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "How does Flask push and pop the application context during a request lifecycle?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "push"
+    },
+    {
+      "question": "What happens internally when a Flask blueprint is registered with an application?",
+      "expected_file": "src/flask/sansio/blueprints.py",
+      "expected_function": "register",
+      "also_valid": ["src/flask/blueprints.py", "src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask match an incoming URL to a view function through its internal routing?",
+      "expected_file": "src/flask/sansio/scaffold.py",
+      "expected_function": "add_url_rule",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What is the internal mechanism Flask uses to dispatch a request to the correct handler?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "full_dispatch_request",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "How does Flask handle exceptions that occur during request dispatch?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "handle_exception",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "What internal function does Flask call to finalize and send a response after a view returns?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "finalize_request",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "How does Flask manage the teardown functions after a request context is popped?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "pop",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What is the internal call chain from a blueprint route decorator to URL rule registration?",
+      "expected_file": "src/flask/sansio/blueprints.py",
+      "expected_function": "route",
+      "also_valid": ["src/flask/blueprints.py", "src/flask/sansio/scaffold.py"]
+    },
+    {
+      "question": "How does Flask preprocess a request before dispatching to the view function?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "preprocess_request",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "What function does Flask use to process the response after the view function returns?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "process_response",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "How does Flask handle HTTP exceptions differently from regular exceptions during dispatch?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "handle_http_exception",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What is the internal mechanism for Flask's before_request hooks to run before dispatch?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "preprocess_request",
+      "also_valid": ["src/flask/sansio/app.py", "src/flask/sansio/scaffold.py"]
+    },
+    {
+      "question": "How does Flask ensure the application context exists before handling a request?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "push",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What function does Flask call internally to convert a view return value into a Response object?",
+      "expected_file": "src/flask/sansio/app.py",
+      "expected_function": "make_response",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask's WSGI application entry point route an incoming request to dispatch?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "wsgi_app",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "What internal function handles the URL matching and raises routing exceptions in Flask?",
+      "expected_file": "src/flask/app.py",
+      "expected_function": "raise_routing_exception",
+      "also_valid": ["src/flask/sansio/app.py"]
+    },
+    {
+      "question": "How does Flask inject template context variables from context processors?",
+      "expected_file": "src/flask/templating.py",
+      "expected_function": "_render",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "What is the internal function Flask uses to update the template context before rendering?",
+      "expected_file": "src/flask/templating.py",
+      "expected_function": "_render",
+      "also_valid": ["src/flask/app.py"]
+    },
+    {
+      "question": "How does Flask handle the request context stack during nested application calls?",
+      "expected_file": "src/flask/ctx.py",
+      "expected_function": "push",
+      "also_valid": ["src/flask/app.py"]
+    }
+  ]
