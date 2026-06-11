@@ -1,6 +1,34 @@
 import chromadb
 from langchain_ollama import OllamaLLM
 from indexer import OllamaEmbeddings
+import re
+from graph_engine import build_graph, blast_radius
+
+GRAPH_KEYWORDS = ["what breaks", "what calls", "what depends on", "what uses", "callers of", "who calls"]
+
+def is_structural_query(question: str) -> bool:
+    q = question.lower()
+    return any(kw in q for kw in GRAPH_KEYWORDS)
+
+def extract_function_name(question: str) -> str:
+    q = question.lower()
+    for kw in GRAPH_KEYWORDS:
+        q = q.replace(kw, "")
+    
+    tokens = re.findall(r'\b[a-z_][a-z0-9_]*\b', q)
+    stopwords = {"the", "a", "an", "is", "are", "to", "of", "in", "on", "if", 
+                  "i", "this", "function", "method", "does", "do"}
+    candidates = [t for t in tokens if t not in stopwords]
+    
+    if not candidates:
+        return None
+    
+    # prefer snake_case identifiers (likely real function names)
+    underscored = [c for c in candidates if "_" in c]
+    if underscored:
+        return underscored[0]
+    
+    return candidates[0]
 
 llm = OllamaLLM(model="llama3.2:3b", temperature=0.3)
 
@@ -20,7 +48,38 @@ def search(query: str) -> str:
         output += f"\n--- {meta['file']}:L{meta['start_line']} ---\n{doc}\n"
     return output
 
+
+def format_blast_radius(result: dict) -> str:
+    output = f"Blast radius for `{result['function']}`\n\n"
+    
+    output += "Defined in:\n"
+    for loc in result["found_in"]:
+        output += f"  - {loc['file']}:{loc['line']}\n"
+    
+    output += f"\nSource code callers ({result['source_count']}):\n"
+    if result["source_callers"]:
+        for c in result["source_callers"]:
+            output += f"  - {c['name']} in {c['file']}:{c['line']}\n"
+    else:
+        output += "  (none found)\n"
+    
+    output += f"\nTest coverage ({result['test_count']} tests reference this function)\n"
+    
+    if result["source_count"] > 0:
+        output += f"\nChanging this function's signature could affect {result['source_count']} caller(s) listed above."
+    else:
+        output += "\nNo direct source callers found — likely safe to modify, but verify test coverage."
+    
+    return output
+
 def run_agent(question: str) -> str:
+    if is_structural_query(question):
+        func_name = extract_function_name(question)
+        if func_name:
+            G = build_graph("sample/flask")
+            result = blast_radius(G, func_name)
+            if "error" not in result:
+                return format_blast_radius(result)
     context = ""
 
     for i in range(5):
