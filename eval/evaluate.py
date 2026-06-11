@@ -66,11 +66,11 @@ def query_bm25(retriever, question, n=20):
     results = retriever.search(question, n=n)
     return [chunk.file for chunk in results]
 
-def query_collection(collection, question, n=5):
+def query_collection(collection, question, n=7):
     results = collection.query(query_texts=[question], n_results=n)
     return [meta["file"] for meta in results["metadatas"][0]]
 
-def query_hybrid(ast_col, bm25_retriever, question, n=5):
+def query_hybrid(ast_col, bm25_retriever, question, n=7):
     semantic_files = query_collection(ast_col, question, n=20)
     bm25_raw = query_bm25(bm25_retriever, question, n=20)
     bm25_files = [f for f in bm25_raw if "/tests/" not in f and "test_" not in f]
@@ -78,13 +78,27 @@ def query_hybrid(ast_col, bm25_retriever, question, n=5):
     return fused[:n]
 
 def query_reranked(ast_col, bm25_retriever, reranker, question, n=5):
-    semantic_files = query_collection(ast_col, question, n=20)
-    bm25_raw = query_bm25(bm25_retriever, question, n=20)
-    bm25_files = [f for f in bm25_raw if "/tests/" not in f and "test_" not in f]
-    fused = reciprocal_rank_fusion([semantic_files, bm25_files], weights=[2.0, 1.0])
-    candidates = fused[:15]
-    reranked = reranker.rerank(question, candidates, top_n=n)
-    return reranked
+    semantic_results = ast_col.query(query_texts=[question], n_results=20)
+    bm25_raw = bm25_retriever.search(question, n=20)
+    
+    # build candidate chunks with both file path and content
+    candidates = {}
+    for doc, meta in zip(semantic_results["documents"][0], semantic_results["metadatas"][0]):
+        candidates[meta["file"]] = doc
+    for chunk in bm25_raw:
+        if "/tests/" not in chunk.file and "test_" not in chunk.file:
+            if chunk.file not in candidates:
+                candidates[chunk.file] = chunk.func_code
+    
+    files = list(candidates.keys())[:15]
+    texts = [candidates[f] for f in files]
+    
+    # rerank using actual code content
+    reranked_texts = reranker.rerank(question, texts, top_n=n)
+    
+    # map back to file paths
+    text_to_file = {v: k for k, v in candidates.items()}
+    return [text_to_file.get(t, files[i]) for i, t in enumerate(reranked_texts)]
 
 def is_match(cited_file, question):
     expected = question["expected_file"]
@@ -123,11 +137,11 @@ def run_eval():
     for i, q in enumerate(questions):
         question = q["question"]
 
-        ast_files      = query_collection(ast_col, question, n=5)
-        naive_files    = query_collection(naive_col, question, n=5)
-        bm25_files     = query_bm25(bm25_retriever, question, n=5)
-        hybrid_files   = query_hybrid(ast_col, bm25_retriever, question, n=5)
-        reranked_files = query_reranked(ast_col, bm25_retriever, reranker, question, n=5)
+        ast_files      = query_collection(ast_col, question, n=7)
+        naive_files    = query_collection(naive_col, question, n=7)
+        bm25_files     = query_bm25(bm25_retriever, question, n=7)
+        hybrid_files   = query_hybrid(ast_col, bm25_retriever, question, n=7)
+        reranked_files = query_reranked(ast_col, bm25_retriever, reranker, question, n=7)
 
         a_rr = reciprocal_rank(ast_files, q)
         n_rr = reciprocal_rank(naive_files, q)
@@ -177,7 +191,7 @@ def run_eval():
     print(f"{'='*75}")
     for i, q in enumerate(questions):
         if reranked_rr[i] == 0:
-            files = query_reranked(ast_col, bm25_retriever, reranker, q["question"], n=5)
+            files = query_reranked(ast_col, bm25_retriever, reranker, q["question"], n=7)
             print(f"\nQ{i+1}: {q['question']}")
             print(f"  Expected: {q['expected_file']}")
             for f in files[:3]:

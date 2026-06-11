@@ -36,6 +36,8 @@ def chunk_file(filepath):
         if node.type in ("function_definition", "function_declaration"):
             name = node.children[1].text.decode("utf-8")#extract only func name, print w/varwidth encoding
             func_code = code[node.start_byte:node.end_byte].decode("utf-8")#extract function text
+            if len(func_code) > 2000:
+                func_code = func_code[:2000]
             chunks.append(Chunk(name, func_code, node.start_point[0], node.end_point[0], filepath))
     
         for children in node.children:
