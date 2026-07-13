@@ -1,3 +1,5 @@
 sample/flask
 venv/
+venv312/
 db/
+__pycache__/
