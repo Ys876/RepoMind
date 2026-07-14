@@ -69,6 +69,7 @@ Query Router (regex-based)
 
 Backend: FastAPI (`/index`, `/ask`)
 Frontend: React (paste GitHub URL -> index -> ask questions)
+Also available as an MCP server (`src/mcp_server.py`) exposing the same search and blast radius logic as tools over stdio, for use directly from Claude Desktop or Cursor instead of the web UI.
 
 ---
 
@@ -80,6 +81,7 @@ Frontend: React (paste GitHub URL -> index -> ask questions)
 - **rank_bm25**: keyword retrieval with a custom code-aware tokenizer
 - **NetworkX**: call graph for structural queries
 - **FastAPI** + **React**: backend API and frontend UI
+- **MCP** (Model Context Protocol): stdio server exposing search and blast radius as tools for Claude Desktop / Cursor
 
 A custom iterative agent loop is used instead of LangChain's `AgentExecutor`. The 3B parameter model couldn't reliably follow the ReAct prompt format required by `AgentExecutor`, so the agent loop (search -> evaluate -> decide) is implemented directly.
 
@@ -159,6 +161,38 @@ npm start
 
 ---
 
+## MCP Server
+
+The retrieval pipeline and symbol graph are also available as an MCP server (`src/mcp_server.py`), so Claude Desktop or Cursor can query the codebase directly, without going through the FastAPI/React app.
+
+Two tools are exposed:
+
+- `search_codebase(query)`: hybrid BM25 + semantic search, returns up to 5 file:line results ranked by combined relevance.
+- `blast_radius_check(function_name)`: given an exact function name, returns every source and test caller from the call graph, useful before renaming or removing a function.
+
+The server indexes a single repository on startup, set via the `REPO_PATH` constant at the top of `src/mcp_server.py` (defaults to `sample/flask`). In addition to the Flask benchmark, it has been manually validated against a second repository (blotto-solver), confirming retrieval and graph queries work outside the benchmark repo.
+
+Run it directly:
+
+```bash
+python src/mcp_server.py
+```
+
+Or connect it from Claude Desktop / Cursor by adding it to your MCP config, for example `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "repomind": {
+      "command": "python",
+      "args": ["/absolute/path/to/RepoMind/src/mcp_server.py"]
+    }
+  }
+}
+```
+
+---
+
 ## Limitations
 
 - Tested on one repository (Flask, Python) with a 60-question benchmark. Multi-repository and multi-language validation is in progress.
@@ -173,4 +207,4 @@ npm start
 - [ ] Multi-repository evaluation (Python + JavaScript)
 - [ ] Latency benchmarks per pipeline stage
 - [ ] Graph edge accuracy study (sampled precision)
-- [ ] MCP server exposing the retrieval pipeline to Claude Code / Cursor
+- [x] MCP server exposing the retrieval pipeline to Claude Desktop / Cursor
